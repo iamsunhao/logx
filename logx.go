@@ -11,13 +11,13 @@ import (
 func getFilename() string {
 	dirInfo, err := os.Stat("log")
 	if err != nil {
-		err = os.Mkdir("log", os.ModeDir)
+		err = os.Mkdir("log", os.ModeSetuid)
 		if err != nil {
-			log.Fatalln("Failed to make dir", err)
+			log.Fatalln("创建 log 文件夹失败。", err)
 		}
 	} else {
 		if !dirInfo.IsDir() {
-			log.Fatalln("log is exist but it is not a dir")
+			log.Fatalln("存在 log，但并不是目录。")
 		}
 	}
 	return fmt.Sprintf("log/%s.log", time.Now().Format("20060102"))
@@ -28,21 +28,21 @@ func Info(args ...interface{}) {
 	file, err := os.OpenFile(getFilename(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	defer file.Close()
 	if err != nil {
-		log.Fatalln("Failed to open log file", err)
+		log.Fatalln("打开日志文件失败。", err)
 	}
-	logger := log.New(file, "INFO ", log.Ldate|log.Ltime|log.Lshortfile)
+	logger := log.New(file, "INFO ", log.Ldate|log.Ltime)
 	logger.Println(args...)
 }
 
-//Danger 创建前缀为ERROR的日志
-func Danger(args ...interface{}) {
+//Error 创建前缀为ERROR的日志
+func Error(args ...interface{}) {
 	file, err := os.OpenFile(getFilename(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	defer file.Close()
 	if err != nil {
-		log.Fatalln("Failed to open log file", err)
+		log.Fatalln("打开日志文件失败。", err)
 	}
-	logger := log.New(file, "ERROR ", log.Ldate|log.Ltime|log.Lshortfile)
-	logger.Println(args...)
+	logger := log.New(file, "ERROR ", log.Ldate|log.Ltime)
+	logger.Fatalln(args...)
 }
 
 //Warning 创建前缀为WARNING的日志
@@ -50,8 +50,8 @@ func Warning(args ...interface{}) {
 	file, err := os.OpenFile(getFilename(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	defer file.Close()
 	if err != nil {
-		log.Fatalln("Failed to open log file", err)
+		log.Fatalln("打开日志文件失败。", err)
 	}
-	logger := log.New(file, "WARNING ", log.Ldate|log.Ltime|log.Lshortfile)
+	logger := log.New(file, "WARNING ", log.Ldate|log.Ltime)
 	logger.Println(args...)
 }
