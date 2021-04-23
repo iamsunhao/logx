@@ -11,7 +11,7 @@ import (
 func getFilename() string {
 	dirInfo, err := os.Stat("log")
 	if err != nil {
-		err = os.Mkdir("log", os.ModeSetuid)
+		err = os.Mkdir("log", 0666)
 		if err != nil {
 			log.Fatalln("创建 log 文件夹失败。", err)
 		}
