@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -14,6 +15,10 @@ func getFilename() string {
 		err = os.Mkdir("log", 0666)
 		if err != nil {
 			log.Fatalln("创建 log 文件夹失败。", err)
+		}
+		//如果操作系统为Linux，防止文件夹权限有问题，执行一次chmod
+		if runtime.GOOS == "linux" {
+			os.Chmod("log", 0666)
 		}
 	} else {
 		if !dirInfo.IsDir() {
